@@ -82,6 +82,8 @@ def scraper(url, resp):
 
 
 def extract_next_links(url, resp):
+    logger.info(f"Found {len(links)} links on {url}")
+
     links = []
 
     try:
@@ -113,38 +115,41 @@ def is_valid(url):
         # Avoid trap-like URLs
         if len(url) > 250:
             return False
-        if re.search(r'(calendar|events|replytocom|sort|session|share|utm_|page=\d+|view=|id=|offset=)', url.lower()):
-            return False
+        # if re.search(r'(calendar|events|replytocom|sort|session|share|utm_|page=\d+|view=|id=|offset=)', url.lower()):
+        #     return False
         if re.search(r'(\/.+\/)\1{2,}', parsed.path):
             return False
         
 
         # Enforce allowed domains
-        # allowed_domains = {
-        #     "ics.uci.edu",
-        #     "cs.uci.edu",
-        #     "informatics.uci.edu",
-        #     "stat.uci.edu",
-        #     "today.uci.edu"
-        # }
+        allowed_domains = {
+            "ics.uci.edu",
+            "cs.uci.edu",
+            "informatics.uci.edu",
+            "stat.uci.edu",
+            "today.uci.edu"
+        }
         # if not any(domain in parsed.netloc for domain in allowed_domains):
         #     return False
 
         domain = parsed.netloc.lower()
-
-        if domain == "today.uci.edu":
-            if not parsed.path.startswith("/department/information_computer_sciences/"):
-                return False
-        elif domain.endswith(".ics.uci.edu") or domain == "ics.uci.edu":
-            pass
-        elif domain.endswith(".cs.uci.edu") or domain == "cs.uci.edu":
-            pass
-        elif domain.endswith(".informatics.uci.edu") or domain == "informatics.uci.edu":
-            pass
-        elif domain.endswith(".stat.uci.edu") or domain == "stat.uci.edu":
-            pass
-        else:
+        if not any(domain in parsed.netloc for domain in allowed_domains):
+            logger.info(f"Rejected {url} due to unmatched domain.")
             return False
+
+        # if domain == "today.uci.edu":
+        #     if not parsed.path.startswith("/department/information_computer_sciences/"):
+        #         return False
+        # elif domain.endswith(".ics.uci.edu") or domain == "ics.uci.edu":
+        #     pass
+        # elif domain.endswith(".cs.uci.edu") or domain == "cs.uci.edu":
+        #     pass
+        # elif domain.endswith(".informatics.uci.edu") or domain == "informatics.uci.edu":
+        #     pass
+        # elif domain.endswith(".stat.uci.edu") or domain == "stat.uci.edu":
+        #     pass
+        # else:
+        #     return False
 
         # Skip unwanted file types
         return not re.match(
