@@ -50,6 +50,8 @@ url_fingerprints = {}        # Tracks content fingerprints to detect similar pag
 #     return [link for link in links if is_valid(link)]
 
 def scraper(url, resp):
+    logger.info(f"Extracted {len(links)} raw links from {resp.url}")
+
     defragmented_url, _ = urldefrag(url)
 
     if defragmented_url in unique_pages or resp.status != 200 or resp.raw_response is None:
