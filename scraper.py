@@ -8,7 +8,9 @@ import re
 from urllib.parse import urlparse, urljoin
 import logging
 from bs4 import BeautifulSoup
-logger = logging.getLogger(__name__)
+
+from utils import get_logger
+
 from collections import deque
 from urllib.parse import urldefrag
 
@@ -43,6 +45,7 @@ page_word_counts = {}        # {url: word_count} - tracks word counts for each p
 unique_pages = set()         # Tracks unique URLs (defragmented)
 word_counter = Counter()     # Tracks global word frequencies (for top 50)
 url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
+logger = get_logger("Scraper", "SCRAPER")
 
 
 def scraper(url, resp):
