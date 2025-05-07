@@ -34,18 +34,18 @@ logger.info("🧠 Scraper logging has been initialized.")
 #     most_common = Counter(filtered_words).most_common(15)
 #     return " ".join([word for word, _ in most_common])
 
-# try:
-#     nltk.data.find('corpora/stopwords')
-# except LookupError:
-#     nltk.download('stopwords', quiet=True)
-
-
 try:
-    nltk.data.find('tokenizers/punkt')
+    nltk.data.find('corpora/stopwords')
 except LookupError:
-    logger.info("🧠 EXCEPTING LOOKUP ERROR.")
+    nltk.download('stopwords', quiet=True)
 
-    nltk.download('punkt', quiet=True)
+
+# try:
+#     nltk.data.find('tokenizers/punkt')
+# except LookupError:
+#     logger.info("🧠 EXCEPTING LOOKUP ERROR.")
+
+#     nltk.download('punkt', quiet=True)
 
 logger.info("🧠 downloaded ntlk.")
 
