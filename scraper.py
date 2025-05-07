@@ -12,6 +12,9 @@ from utils import get_logger
 
 from collections import deque
 from urllib.parse import urldefrag
+import builtins
+print("🧨 DEBUG: My scraper.py was loaded")
+builtins.__SCRAPER_LOADED__ = True
 
 import time
 logger = get_logger("Scraper", "SCRAPER")
