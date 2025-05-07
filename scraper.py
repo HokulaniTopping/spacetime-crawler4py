@@ -2,6 +2,8 @@
 
 from collections import defaultdict, Counter
 import os
+print(f"🧨 THIS IS scraper.py FROM: {os.path.abspath(__file__)}")
+
 import json
 import nltk
 import re
