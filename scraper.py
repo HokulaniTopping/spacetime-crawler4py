@@ -38,6 +38,7 @@ try:
     nltk.data.find('corpora/stopwords')
 except LookupError:
     nltk.download('stopwords', quiet=True)
+logger.info("🧠 downloaded ntlk.")
 
 
 subdomains = defaultdict(set) # {subdomain: set(urls)} - tracks URLs per subdomain
@@ -45,6 +46,7 @@ page_word_counts = {}        # {url: word_count} - tracks word counts for each p
 unique_pages = set()         # Tracks unique URLs (defragmented)
 word_counter = Counter()     # Tracks global word frequencies (for top 50)
 url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
+logger.info("🧠 Initialized globals.")
 
 
 
