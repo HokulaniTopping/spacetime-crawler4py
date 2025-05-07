@@ -102,6 +102,14 @@ def extract_next_links(url, resp):
     logger.info("🧠 inside extract_next_link.")
     links = []
 
+    #try once
+    if resp.raw_response is None:
+        logger.warning("❌ raw_response is None.")
+    else:
+        logger.info(f"✅ raw_response.content length: {len(resp.raw_response.content)}")
+
+
+
     try:
         logger.info(f"IN TRY ")
         if resp.status != 200 or resp.raw_response is None:
@@ -109,6 +117,8 @@ def extract_next_links(url, resp):
             return []
 
         soup = BeautifulSoup(resp.raw_response.content, "lxml")
+        a_tags = soup.find_all('a', href=True)
+        logger.info(f"🔗 Found {len(a_tags)} <a> tags in {url}")
 
         for a_tag in soup.find_all('a', href=True):
             href = a_tag['href']
