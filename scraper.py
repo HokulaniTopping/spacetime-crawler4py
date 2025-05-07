@@ -15,6 +15,22 @@ from urllib.parse import urldefrag
 import time
 
 
+'''SIMILARITY CHECK'''
+# Check for content similarity with previously seen pages
+#         fingerprint = get_page_fingerprint(text)
+#         if fingerprint in url_fingerprints.values():
+#             logger.info(f"Skipping similar content page: {url}")
+#             return links
+#         url_fingerprints[defragmented_url] = fingerprint
+
+
+# def get_page_fingerprint(text):
+#     """Create a simple fingerprint for a page to detect similar content"""
+#     # Get most common 15 words as a fingerprint
+#     words = re.findall(r'\b[a-zA-Z]{3,15}\b', text.lower())
+#     filtered_words = [w for w in words if w not in STOP_WORDS]
+#     most_common = Counter(filtered_words).most_common(15)
+#     return " ".join([word for word, _ in most_common])
 
 try:
     nltk.data.find('corpora/stopwords')
@@ -26,7 +42,7 @@ subdomains = defaultdict(set) # {subdomain: set(urls)} - tracks URLs per subdoma
 page_word_counts = {}        # {url: word_count} - tracks word counts for each page
 unique_pages = set()         # Tracks unique URLs (defragmented)
 word_counter = Counter()     # Tracks global word frequencies (for top 50)
-# MAX_PAGES_TO_CRAWL = 100
+url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
 
 
 # def scraper(url, resp):
