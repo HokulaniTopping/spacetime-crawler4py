@@ -120,6 +120,8 @@ def extract_next_links(url, resp):
     except Exception as e:
         print(f"Error processing page {url}: {e}")
     
+    logger.info(f"[LINKS] Extracted {len(links)} raw links from {resp.url}")
+
     return links
 
 # Enforce allowed domains
