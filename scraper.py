@@ -66,7 +66,8 @@ url_fingerprints = {}        # Tracks content fingerprints to detect similar pag
 
 
 def scraper(url, resp):
-    logger.info("🧠 inside scraper.")
+    print(f"💥 scraper() was called with: {url}")
+
 
     logger.info(f"[SCRAPER] Processing: {url}")
 
