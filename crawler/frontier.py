@@ -31,6 +31,7 @@ class Frontier(object):
         else:
             # Set the frontier state with contents of save file.
             self._parse_save_file()
+            self.logger.info(f"JUST SET FRONTIER WITH {self.to_be_downloaded}")
             if not self.save:
                 for url in self.config.seed_urls:
                     self.add_url(url)
