@@ -136,11 +136,13 @@ def is_valid(url):
 
         # Avoid trap-like URLs
         if len(url) > 250:
+            logger.info(f"REJECTED {url} -- TOO LONG")
             return False
         
         # if re.search(r'(calendar|events|replytocom|sort|session|share|utm_|page=\d+|view=|id=|offset=)', url.lower()):
         #     return False
         if re.search(r'(\/.+\/)\1{2,}', parsed.path):
+            logger.info(f"[VALIDATION] Rejected {url} - trap pattern.")
             return False
         
 
