@@ -104,7 +104,7 @@ def extract_next_links(url, resp):
 
     try:
         if resp.status != 200 or resp.raw_response is None:
-            logger.warning(f"❗Skipping {url} due to status {resp.status} or missing response")
+            logger.info(f"❗Skipping {url} due to status {resp.status} or missing response")
             return []
 
         soup = BeautifulSoup(resp.raw_response.content, "lxml")
