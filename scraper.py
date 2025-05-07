@@ -113,7 +113,9 @@ def extract_next_links(url, resp):
             href = a_tag['href']
             absolute_url = urljoin(resp.url, href)
             clean_url, _ = urldefrag(absolute_url)
+
             links.append(clean_url)
+            logger.info(f"😏 Appended {clean_url} to links list")
 
     except Exception as e:
         print(f"Error processing page {url}: {e}")

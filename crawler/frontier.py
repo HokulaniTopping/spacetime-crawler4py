@@ -31,12 +31,13 @@ class Frontier(object):
         else:
             # Set the frontier state with contents of save file.
             self._parse_save_file()
-            self.logger.info(f"JUST SET FRONTIER WITH {self.to_be_downloaded}")
+            self.logger.info(f"🐕 JUST SET FRONTIER WITH {self.to_be_downloaded}")
             if not self.save:
                 for url in self.config.seed_urls:
                     self.add_url(url)
 
     def _parse_save_file(self):
+        #🍑
         ''' This function can be overridden for alternate saving techniques. '''
         total_count = len(self.save)
         tbd_count = 0
@@ -45,7 +46,7 @@ class Frontier(object):
                 self.to_be_downloaded.append(url)
                 tbd_count += 1
         self.logger.info(
-            f"Found {tbd_count} urls to be downloaded from {total_count} "
+            f"🍑 Found {tbd_count} urls to be downloaded from {total_count} "
             f"total urls discovered.")
 
     def get_tbd_url(self):
