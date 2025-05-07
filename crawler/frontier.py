@@ -48,6 +48,7 @@ class Frontier(object):
             f"total urls discovered.")
 
     def get_tbd_url(self):
+        self.logger.info("In get_tbd_url")
         try:
             return self.to_be_downloaded.pop()
         except IndexError:
@@ -57,7 +58,6 @@ class Frontier(object):
         url = normalize(url)
         urlhash = get_urlhash(url)
         self.logger.info(f"[FRONTIER] Adding URL to queue: {url}")
-
         if urlhash not in self.save:
             self.save[urlhash] = (url, False)
             self.save.sync()
