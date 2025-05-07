@@ -45,10 +45,6 @@ word_counter = Counter()     # Tracks global word frequencies (for top 50)
 url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
 
 
-# def scraper(url, resp):
-#     links = extract_next_links(url, resp)
-#     return [link for link in links if is_valid(link)]
-
 def scraper(url, resp):
     logger.info(f"Extracted {len(links)} raw links from {resp.url}")
 
@@ -105,7 +101,14 @@ def extract_next_links(url, resp):
     
     return links
 
-
+# Enforce allowed domains
+allowed_domains = {
+    "ics.uci.edu",
+    "cs.uci.edu",
+    "informatics.uci.edu",
+    "stat.uci.edu",
+    "today.uci.edu"
+}
 
 def is_valid(url):
     try:
@@ -123,16 +126,12 @@ def is_valid(url):
             return False
         
 
-        # Enforce allowed domains
-        allowed_domains = {
-            "ics.uci.edu",
-            "cs.uci.edu",
-            "informatics.uci.edu",
-            "stat.uci.edu",
-            "today.uci.edu"
-        }
+
         # if not any(domain in parsed.netloc for domain in allowed_domains):
         #     return False
+
+        if not any(domain.endswith(seed) for seed in allowed_domains):
+            return False
 
         domain = parsed.netloc.lower()
         if not any(domain in parsed.netloc for domain in allowed_domains):
