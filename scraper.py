@@ -602,9 +602,8 @@ def extract_next_links(url, resp):
         if defragmented_url in unique_pages:
             return []
 
-        if len(unique_pages) >= MAX_PAGES_TO_CRAWL:
-            return []
 
+        #update unique url analytics
         unique_pages.add(defragmented_url)
 
         soup = BeautifulSoup(resp.raw_response.content, "lxml")
@@ -618,6 +617,7 @@ def extract_next_links(url, resp):
         page_word_counts[defragmented_url] = len(words)
         word_counter.update(words)
 
+        #Logging subdomains
         parsed = urlparse(defragmented_url)
         if parsed.netloc.endswith("uci.edu"):
             subdomains[parsed.netloc].add(defragmented_url)
@@ -631,7 +631,6 @@ def extract_next_links(url, resp):
 
     except Exception as e:
         print(f"Error processing page {url}: {e}")
-
     return links
 
 
@@ -652,14 +651,30 @@ def is_valid(url):
         
 
         # Enforce allowed domains
-        allowed_domains = {
-            "ics.uci.edu",
-            "cs.uci.edu",
-            "informatics.uci.edu",
-            "stat.uci.edu",
-            "today.uci.edu"
-        }
-        if not any(domain in parsed.netloc for domain in allowed_domains):
+        # allowed_domains = {
+        #     "ics.uci.edu",
+        #     "cs.uci.edu",
+        #     "informatics.uci.edu",
+        #     "stat.uci.edu",
+        #     "today.uci.edu"
+        # }
+        # if not any(domain in parsed.netloc for domain in allowed_domains):
+        #     return False
+
+        domain = parsed.netloc.lower()
+
+        if domain == "today.uci.edu":
+            if not parsed.path.startswith("/department/information_computer_sciences/"):
+                return False
+        elif domain.endswith(".ics.uci.edu") or domain == "ics.uci.edu":
+            pass
+        elif domain.endswith(".cs.uci.edu") or domain == "cs.uci.edu":
+            pass
+        elif domain.endswith(".informatics.uci.edu") or domain == "informatics.uci.edu":
+            pass
+        elif domain.endswith(".stat.uci.edu") or domain == "stat.uci.edu":
+            pass
+        else:
             return False
 
         # Skip unwanted file types
@@ -724,6 +739,8 @@ def generate_report():
     return "\n".join(report)
 
 
+import atexit
+atexit.register(generate_report)
 
 
 
