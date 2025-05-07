@@ -100,10 +100,6 @@ def scraper(url, resp):
 
 def extract_next_links(url, resp):
     logger.info("🧠 inside extract_next_link.")
-
-    logger.info(f"[LINKS] Extracted {len(links)} links from {resp.url}")
-    logger.info(f"Found {len(links)} links on {url}")
-
     links = []
 
     try:
@@ -122,6 +118,8 @@ def extract_next_links(url, resp):
         print(f"Error processing page {url}: {e}")
     
     logger.info(f"[LINKS] Extracted {len(links)} raw links from {resp.url}")
+    logger.info(f"Found {len(links)} links on {url}")
+
 
     return links
 
