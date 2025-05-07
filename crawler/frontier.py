@@ -50,6 +50,7 @@ class Frontier(object):
     def get_tbd_url(self):
         self.logger.info("In get_tbd_url")
         try:
+            self.logger.info(f"In try about to return {self.to_be_downloaded.pop()}")
             return self.to_be_downloaded.pop()
         except IndexError:
             return None
