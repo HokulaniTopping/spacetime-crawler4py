@@ -51,6 +51,8 @@ logger.info("🧠 Initialized globals.")
 
 
 def scraper(url, resp):
+    logger.info("🧠 inside scraper.")
+
     logger.info(f"[SCRAPER] Processing: {url}")
 
     logger.info(f"Extracted {len(links)} raw links from {resp.url}")
@@ -63,6 +65,8 @@ def scraper(url, resp):
     unique_pages.add(defragmented_url)
 
     try:
+        logger.info("🧠 about to try beautiful soup.")
+
         soup = BeautifulSoup(resp.raw_response.content, "lxml")
         
         # Word and analytics processing
@@ -87,6 +91,8 @@ def scraper(url, resp):
 
 
 def extract_next_links(url, resp):
+    logger.info("🧠 inside extract_next_link.")
+
     logger.info(f"[LINKS] Extracted {len(links)} links from {resp.url}")
     logger.info(f"Found {len(links)} links on {url}")
 
@@ -113,6 +119,8 @@ def extract_next_links(url, resp):
 
 
 def is_valid(url):
+    logger.info("🧠 inside is_valid.")
+
     try:
         parsed = urlparse(url)
 
@@ -212,6 +220,7 @@ def generate_report():
     
     return "\n".join(report)
 
+logger.info("🧠 about to make the report.")
 
 import atexit
 atexit.register(generate_report)
