@@ -36,7 +36,7 @@ logger = get_logger("Scraper", "SCRAPER")
 
 try:
     nltk.data.find('corpora/stopwords')
-    logger.info("🧠 downloaded ntlk.")
+    # logger.info("🧠 downloaded ntlk.")
 except LookupError:
     nltk.download('stopwords', quiet=True)
 
@@ -56,7 +56,7 @@ page_word_counts = {}        # {url: word_count} - tracks word counts for each p
 unique_pages = set()         # Tracks unique URLs (defragmented)
 word_counter = Counter()     # Tracks global word frequencies (for top 50)
 url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
-logger.info("🧠 Initialized globals.")
+# logger.info("🧠 Initialized globals.")
 
 
 
@@ -90,6 +90,7 @@ def scraper(url, resp):
         if parsed.netloc.endswith("uci.edu"):
             subdomains[parsed.netloc].add(defragmented_url)
 
+        logger.info(f"✅ ABOUT TO CALL EXTRAXT NEXT LINK")
         links = extract_next_links(soup, resp.url)
         return [link for link in links if is_valid(link)]
 
@@ -141,7 +142,7 @@ def extract_next_links(url, resp):
 
 
 def is_valid(url):
-    logger.info("🧠 inside is_valid.")
+    # logger.info("🧠 inside is_valid.")
 
     try:
         parsed = urlparse(url)
@@ -180,7 +181,7 @@ def is_valid(url):
         #     logger.info(f"Rejected {url} due to unmatched domain.")
         #     return False
         
-        logger.info(f"[VALIDATION] Evaluating: {url}")
+        # logger.info(f"[VALIDATION] Evaluating: {url}")
 
 
 
@@ -245,7 +246,7 @@ def generate_report():
     
     return "\n".join(report)
 
-logger.info("🧠 about to make the report.")
+# logger.info("🧠 about to make the report.")
 
 import atexit
 atexit.register(generate_report)
