@@ -8,14 +8,14 @@ import re
 from urllib.parse import urlparse, urljoin
 import logging
 from bs4 import BeautifulSoup
-
 from utils import get_logger
 
 from collections import deque
 from urllib.parse import urldefrag
 
 import time
-
+logger = get_logger("Scraper", "SCRAPER")
+logger.info("🧠 Scraper logging has been initialized.")
 
 '''SIMILARITY CHECK'''
 # Check for content similarity with previously seen pages
@@ -45,7 +45,7 @@ page_word_counts = {}        # {url: word_count} - tracks word counts for each p
 unique_pages = set()         # Tracks unique URLs (defragmented)
 word_counter = Counter()     # Tracks global word frequencies (for top 50)
 url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
-logger = get_logger("Scraper", "SCRAPER")
+
 
 
 def scraper(url, resp):
