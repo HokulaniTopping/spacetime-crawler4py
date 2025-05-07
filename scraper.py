@@ -137,6 +137,7 @@ def is_valid(url):
             return False
         
 
+        domain = parsed.netloc.lower()
 
         # if not any(domain in parsed.netloc for domain in allowed_domains):
         #     return False
@@ -148,12 +149,12 @@ def is_valid(url):
             "today.uci.edu"
         }
         if not any(domain.endswith(seed) for seed in allowed_domains):
-            return False
-
-        domain = parsed.netloc.lower()
-        if not any(domain in parsed.netloc for domain in allowed_domains):
             logger.info(f"Rejected {url} due to unmatched domain.")
             return False
+
+        # if not any(domain in parsed.netloc for domain in allowed_domains):
+        #     logger.info(f"Rejected {url} due to unmatched domain.")
+        #     return False
         
         logger.info(f"[VALIDATION] Evaluating: {url}")
 
