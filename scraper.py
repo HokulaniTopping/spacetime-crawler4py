@@ -3,6 +3,7 @@
 from collections import defaultdict, Counter
 import os
 print(f"🧨 THIS IS scraper.py FROM: {os.path.abspath(__file__)}")
+print(f"📂 Current working directory: {os.getcwd()}")
 
 import json
 import nltk
