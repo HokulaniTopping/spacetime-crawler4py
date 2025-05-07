@@ -103,6 +103,7 @@ def extract_next_links(url, resp):
     links = []
 
     try:
+        logger.info(f"IN TRY ")
         if resp.status != 200 or resp.raw_response is None:
             logger.info(f"❗Skipping {url} due to status {resp.status} or missing response")
             return []
