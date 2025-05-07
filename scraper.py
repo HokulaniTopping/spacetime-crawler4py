@@ -55,8 +55,6 @@ def scraper(url, resp):
 
     logger.info(f"[SCRAPER] Processing: {url}")
 
-    logger.info(f"Extracted {len(links)} raw links from {resp.url}")
-
     defragmented_url, _ = urldefrag(url)
 
     if defragmented_url in unique_pages or resp.status != 200 or resp.raw_response is None:
