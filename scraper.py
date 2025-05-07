@@ -46,6 +46,8 @@ url_fingerprints = {}        # Tracks content fingerprints to detect similar pag
 
 
 def scraper(url, resp):
+    logger.info(f"[SCRAPER] Processing: {url}")
+
     logger.info(f"Extracted {len(links)} raw links from {resp.url}")
 
     defragmented_url, _ = urldefrag(url)
@@ -80,6 +82,7 @@ def scraper(url, resp):
 
 
 def extract_next_links(url, resp):
+    logger.info(f"[LINKS] Extracted {len(links)} links from {resp.url}")
     logger.info(f"Found {len(links)} links on {url}")
 
     links = []
@@ -137,20 +140,10 @@ def is_valid(url):
         if not any(domain in parsed.netloc for domain in allowed_domains):
             logger.info(f"Rejected {url} due to unmatched domain.")
             return False
+        
+        logger.info(f"[VALIDATION] Evaluating: {url}")
 
-        # if domain == "today.uci.edu":
-        #     if not parsed.path.startswith("/department/information_computer_sciences/"):
-        #         return False
-        # elif domain.endswith(".ics.uci.edu") or domain == "ics.uci.edu":
-        #     pass
-        # elif domain.endswith(".cs.uci.edu") or domain == "cs.uci.edu":
-        #     pass
-        # elif domain.endswith(".informatics.uci.edu") or domain == "informatics.uci.edu":
-        #     pass
-        # elif domain.endswith(".stat.uci.edu") or domain == "stat.uci.edu":
-        #     pass
-        # else:
-        #     return False
+
 
         # Skip unwanted file types
         return not re.match(
