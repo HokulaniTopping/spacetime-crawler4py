@@ -15,7 +15,7 @@ from urllib.parse import urldefrag
 
 import time
 logger = get_logger("Scraper", "SCRAPER")
-logger.info("🧠 Scraper logging has been initialized.")
+# logger.info("🧠 Scraper logging has been initialized.")
 
 '''SIMILARITY CHECK'''
 # Check for content similarity with previously seen pages
@@ -36,6 +36,7 @@ logger.info("🧠 Scraper logging has been initialized.")
 
 try:
     nltk.data.find('corpora/stopwords')
+    logger.info("🧠 downloaded ntlk.")
 except LookupError:
     nltk.download('stopwords', quiet=True)
 
@@ -47,7 +48,7 @@ except LookupError:
 
 #     nltk.download('punkt', quiet=True)
 
-logger.info("🧠 downloaded ntlk.")
+
 
 
 subdomains = defaultdict(set) # {subdomain: set(urls)} - tracks URLs per subdomain
