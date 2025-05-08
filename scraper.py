@@ -197,7 +197,7 @@ def is_valid(url):
 
 
         # Skip unwanted file types
-        
+        logger.info("😬 about to return whatever is not re match")
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
