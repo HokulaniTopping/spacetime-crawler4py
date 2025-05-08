@@ -155,17 +155,21 @@ def is_valid(url):
         parsed = urlparse(url)
 
         if parsed.scheme not in {"http", "https"}:
+            logger.info("⚠️ BOUT TO RETURN FALSE IN PARSED SCHEME THING.")
             return False
 
         # Avoid trap-like URLs
         if len(url) > 250:
             logger.info(f"REJECTED {url} -- TOO LONG")
+            logger.info("⚠️ BOUT TO RETURN FALSE IN TOO LONG URL.")
             return False
         
         # if re.search(r'(calendar|events|replytocom|sort|session|share|utm_|page=\d+|view=|id=|offset=)', url.lower()):
         #     return False
+        
         if re.search(r'(\/.+\/)\1{2,}', parsed.path):
             logger.info(f"[VALIDATION] Rejected {url} - trap pattern.")
+            logger.info("⚠️ BOUT TO RETURN FALSE IN RE.SEARCH THING.")
             return False
         
 
@@ -193,6 +197,7 @@ def is_valid(url):
 
 
         # Skip unwanted file types
+        
         return not re.match(
             r".*\.(css|js|bmp|gif|jpe?g|ico"
             + r"|png|tiff?|mid|mp2|mp3|mp4"
@@ -202,6 +207,7 @@ def is_valid(url):
             + r"|epub|dll|cnf|tgz|sha1"
             + r"|thmx|mso|arff|rtf|jar|csv"
             + r"|rm|smil|wmv|swf|wma|zip|rar|gz)$", parsed.path.lower())
+    
 
     except TypeError:
         print("TypeError for", url)
