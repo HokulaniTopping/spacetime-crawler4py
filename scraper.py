@@ -23,22 +23,50 @@ import time
 logger = get_logger("Scraper", "SCRAPER")
 # logger.info("🧠 Scraper logging has been initialized.")
 
-'''SIMILARITY CHECK'''
-# Check for content similarity with previously seen pages
-#         fingerprint = get_page_fingerprint(text)
-#         if fingerprint in url_fingerprints.values():
-#             logger.info(f"Skipping similar content page: {url}")
-#             return links
-#         url_fingerprints[defragmented_url] = fingerprint
+'''SIMILARITY CHECK USING SIM HASHING'''
+import hashlib
 
+def tokenize(text):
+    """Simple word tokenizer that ignores stop words and very short words"""
+    words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
+    return words
 
-# def get_page_fingerprint(text):
-#     """Create a simple fingerprint for a page to detect similar content"""
-#     # Get most common 15 words as a fingerprint
-#     words = re.findall(r'\b[a-zA-Z]{3,15}\b', text.lower())
-#     filtered_words = [w for w in words if w not in STOP_WORDS]
-#     most_common = Counter(filtered_words).most_common(15)
-#     return " ".join([word for word, _ in most_common])
+def hash_token(token):
+    """Hash a token into a 64-bit binary string"""
+    return bin(int(hashlib.md5(token.encode('utf-8')).hexdigest(), 16))[2:].zfill(64)
+
+def simhash(text):
+    """Compute the SimHash of a text document"""
+    tokens = tokenize(text)
+    weights = {}
+
+    # You can weigh by frequency or TF-IDF; this uses frequency
+    for token in tokens:
+        weights[token] = weights.get(token, 0) + 1
+
+    vector = [0] * 64
+
+    for token, weight in weights.items():
+        hashbits = hash_token(token)
+        for i in range(64):
+            if hashbits[i] == '1':
+                vector[i] += weight
+            else:
+                vector[i] -= weight
+
+    # Build final fingerprint
+    fingerprint = ''.join(['1' if v > 0 else '0' for v in vector])
+    return fingerprint
+
+def hamming_distance(hash1, hash2):
+    """Compute Hamming distance between two binary strings"""
+    return sum(c1 != c2 for c1, c2 in zip(hash1, hash2))
+
+def are_similar(text1, text2, threshold=3):
+    """Check if two texts are similar based on SimHash (lower is more similar)"""
+    hash1 = simhash(text1)
+    hash2 = simhash(text2)
+    return hamming_distance(hash1, hash2) <= threshold
 
 try:
     nltk.data.find('corpora/stopwords')
