@@ -62,7 +62,7 @@ page_word_counts = {}        # {url: word_count} - tracks word counts for each p
 unique_pages = set()         # Tracks unique URLs (defragmented)
 word_counter = Counter()     # Tracks global word frequencies (for top 50)
 url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
-# logger.info("🧠 Initialized globals.")
+logger.info("✅ Initialized globals.")
 
 
 
@@ -149,7 +149,7 @@ def extract_next_links(url, resp):
 
 
 def is_valid(url):
-    # logger.info("🧠 inside is_valid.")
+    logger.info("🧠 inside is_valid.")
 
     try:
         parsed = urlparse(url)
