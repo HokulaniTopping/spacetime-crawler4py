@@ -19,6 +19,9 @@ import builtins
 print("🧨 DEBUG: My scraper.py was loaded")
 builtins.__SCRAPER_LOADED__ = True
 
+import nltk
+nltk.download('punkt')
+
 import time
 logger = get_logger("Scraper", "SCRAPER")
 # logger.info("🧠 Scraper logging has been initialized.")
