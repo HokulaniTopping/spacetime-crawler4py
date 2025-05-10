@@ -24,63 +24,58 @@ logger = get_logger("Scraper", "SCRAPER")
 # logger.info("🧠 Scraper logging has been initialized.")
 
 '''SIMILARITY CHECK USING SIM HASHING'''
-import hashlib
+# import hashlib
+# def tokenize(text):
+#     """Simple word tokenizer that ignores stop words and very short words"""
+#     words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
+#     return words
+# def hash_token(token):
+#     """Hash a token into a 64-bit binary string"""
+#     return bin(int(hashlib.md5(token.encode('utf-8')).hexdigest(), 16))[2:].zfill(64)
+# def simhash(text):
+#     """Compute the SimHash of a text document"""
+#     tokens = tokenize(text)
+#     weights = {}
+#     # You can weigh by frequency or TF-IDF; this uses frequency
+#     for token in tokens:
+#         weights[token] = weights.get(token, 0) + 1
+#     vector = [0] * 64
+#     for token, weight in weights.items():
+#         hashbits = hash_token(token)
+#         for i in range(64):
+#             if hashbits[i] == '1':
+#                 vector[i] += weight
+#             else:
+#                 vector[i] -= weight
+#     # Build final fingerprint
+#     fingerprint = ''.join(['1' if v > 0 else '0' for v in vector])
+#     return fingerprint
+# def hamming_distance(hash1, hash2):
+#     """Compute Hamming distance between two binary strings"""
+#     return sum(c1 != c2 for c1, c2 in zip(hash1, hash2))
+# def are_similar(text1, text2, threshold=3):
+#     """Check if two texts are similar based on SimHash (lower is more similar)"""
+#     hash1 = simhash(text1)
+#     hash2 = simhash(text2)
+#     return hamming_distance(hash1, hash2) <= threshold
 
-def tokenize(text):
-    """Simple word tokenizer that ignores stop words and very short words"""
-    words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
-    return words
 
-def hash_token(token):
-    """Hash a token into a 64-bit binary string"""
-    return bin(int(hashlib.md5(token.encode('utf-8')).hexdigest(), 16))[2:].zfill(64)
 
-def simhash(text):
-    """Compute the SimHash of a text document"""
-    tokens = tokenize(text)
-    weights = {}
-
-    # You can weigh by frequency or TF-IDF; this uses frequency
-    for token in tokens:
-        weights[token] = weights.get(token, 0) + 1
-
-    vector = [0] * 64
-
-    for token, weight in weights.items():
-        hashbits = hash_token(token)
-        for i in range(64):
-            if hashbits[i] == '1':
-                vector[i] += weight
-            else:
-                vector[i] -= weight
-
-    # Build final fingerprint
-    fingerprint = ''.join(['1' if v > 0 else '0' for v in vector])
-    return fingerprint
-
-def hamming_distance(hash1, hash2):
-    """Compute Hamming distance between two binary strings"""
-    return sum(c1 != c2 for c1, c2 in zip(hash1, hash2))
-
-def are_similar(text1, text2, threshold=3):
-    """Check if two texts are similar based on SimHash (lower is more similar)"""
-    hash1 = simhash(text1)
-    hash2 = simhash(text2)
-    return hamming_distance(hash1, hash2) <= threshold
-
-try:
-    nltk.data.find('corpora/stopwords')
-    # logger.info("🧠 downloaded ntlk.")
-except LookupError:
-    nltk.download('stopwords', quiet=True)
 
 
 # try:
-#     nltk.data.find('tokenizers/punkt')
+#     nltk.data.find('corpora/stopwords')
+#     # logger.info("🧠 downloaded ntlk.")
 # except LookupError:
-#     logger.info("🧠 EXCEPTING LOOKUP ERROR.")
+#     nltk.download('stopwords', quiet=True)
 
-#     nltk.download('punkt', quiet=True)
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    logger.info("🧠 EXCEPTING LOOKUP ERROR.")
+
+    nltk.download('punkt', quiet=True)
 
 
 
@@ -90,12 +85,12 @@ page_word_counts = {}        # {url: word_count} - tracks word counts for each p
 unique_pages = set()         # Tracks unique URLs (defragmented)
 word_counter = Counter()     # Tracks global word frequencies (for top 50)
 url_fingerprints = {}        # Tracks content fingerprints to detect similar pages
-logger.info("✅ Initialized globals.")
+logger.info("✅ Initialized globals.") #prints
 
 
 
 def scraper(url, resp):
-    print(f"💥 scraper() was called with: {url}")
+    print(f"💥 scraper() was called with: {url}") #does not print
 
 
     logger.info(f"[SCRAPER] Processing: {url}")
@@ -135,7 +130,7 @@ def scraper(url, resp):
 
 
 def extract_next_links(url, resp):
-    logger.info("🧠 inside extract_next_link.")
+    logger.info("🧠 inside extract_next_link.") 
     links = []
 
     #try once
