@@ -18,9 +18,8 @@ from urllib.parse import urldefrag
 import builtins
 print("🧨 DEBUG: My scraper.py was loaded")
 builtins.__SCRAPER_LOADED__ = True
-
 import nltk
-nltk.download('punkt')
+nltk.download('punkt', force=True)
 
 import time
 logger = get_logger("Scraper", "SCRAPER")
@@ -76,10 +75,7 @@ logger = get_logger("Scraper", "SCRAPER")
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    logger.info("🧠 EXCEPTING LOOKUP ERROR.")
-
-    nltk.download('punkt', quiet=True)
-
+    nltk.download('punkt')
 
 
 
