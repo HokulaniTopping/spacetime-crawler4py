@@ -25,41 +25,51 @@ import time
 logger = get_logger("Scraper", "SCRAPER")
 # logger.info("🧠 Scraper logging has been initialized.")
 
+
+
+
 '''SIMILARITY CHECK USING SIM HASHING'''
-# import hashlib
-# def tokenize(text):
-#     """Simple word tokenizer that ignores stop words and very short words"""
-#     words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
-#     return words
-# def hash_token(token):
-#     """Hash a token into a 64-bit binary string"""
-#     return bin(int(hashlib.md5(token.encode('utf-8')).hexdigest(), 16))[2:].zfill(64)
-# def simhash(text):
-#     """Compute the SimHash of a text document"""
-#     tokens = tokenize(text)
-#     weights = {}
-#     # You can weigh by frequency or TF-IDF; this uses frequency
-#     for token in tokens:
-#         weights[token] = weights.get(token, 0) + 1
-#     vector = [0] * 64
-#     for token, weight in weights.items():
-#         hashbits = hash_token(token)
-#         for i in range(64):
-#             if hashbits[i] == '1':
-#                 vector[i] += weight
-#             else:
-#                 vector[i] -= weight
-#     # Build final fingerprint
-#     fingerprint = ''.join(['1' if v > 0 else '0' for v in vector])
-#     return fingerprint
-# def hamming_distance(hash1, hash2):
-#     """Compute Hamming distance between two binary strings"""
-#     return sum(c1 != c2 for c1, c2 in zip(hash1, hash2))
-# def are_similar(text1, text2, threshold=3):
-#     """Check if two texts are similar based on SimHash (lower is more similar)"""
-#     hash1 = simhash(text1)
-#     hash2 = simhash(text2)
-#     return hamming_distance(hash1, hash2) <= threshold
+import hashlib
+def tokenize(text):
+    """Simple word tokenizer that ignores stop words and very short words"""
+    words = re.findall(r'\b[a-zA-Z]{3,}\b', text.lower())
+    return words
+
+
+def hash_token(token):
+    """Hash a token into a 64-bit binary string"""
+    return bin(int(hashlib.md5(token.encode('utf-8')).hexdigest(), 16))[2:].zfill(64)
+
+
+def simhash(text):
+    """Compute the SimHash of a text document"""
+    tokens = tokenize(text)
+    weights = {}
+    # You can weigh by frequency or TF-IDF; this uses frequency
+    for token in tokens:
+        weights[token] = weights.get(token, 0) + 1
+    vector = [0] * 64
+    for token, weight in weights.items():
+        hashbits = hash_token(token)
+        for i in range(64):
+            if hashbits[i] == '1':
+                vector[i] += weight
+            else:
+                vector[i] -= weight
+    # Build final fingerprint
+    fingerprint = ''.join(['1' if v > 0 else '0' for v in vector])
+    return fingerprint
+
+
+def hamming_distance(hash1, hash2):
+    """Compute Hamming distance between two binary strings"""
+    return sum(c1 != c2 for c1, c2 in zip(hash1, hash2))
+
+def are_similar(text1, text2, threshold=3):
+    """Check if two texts are similar based on SimHash (lower is more similar)"""
+    hash1 = simhash(text1)
+    hash2 = simhash(text2)
+    return hamming_distance(hash1, hash2) <= threshold
 
 
 
@@ -105,22 +115,43 @@ def scraper(url, resp):
         logger.info("🧠 about to try beautiful soup.")
 
         soup = BeautifulSoup(resp.raw_response.content, "lxml")
-        
+
         # Word and analytics processing
+
+        #gets text
         text = soup.get_text()
+
+        #should have tokenized the word but nltk sucks
         tokens = nltk.word_tokenize(text)
+
+        #loads the stopwords
         stopwords = set(nltk.corpus.stopwords.words('english'))
+
+        #adds the words into a list if they not in stopwords (for analytics later)
         words = [w.lower() for w in tokens if w.isalpha() and w.lower() not in stopwords]
 
+
+        #tracks word count for each page
         page_word_counts[defragmented_url] = len(words)
+
+        #counts words
         word_counter.update(words)
 
+        #parsed the defragmented url
         parsed = urlparse(defragmented_url)
+
+
+        #if the netlocation is in uci.edu
         if parsed.netloc.endswith("uci.edu"):
+
+            #add it to the subdomain
             subdomains[parsed.netloc].add(defragmented_url)
 
         logger.info(f"✅ ABOUT TO CALL EXTRAXT NEXT LINK")
+        #extracts next link
         links = extract_next_links(soup, resp.url)
+
+        #returns a list of links that are valid
         return [link for link in links if is_valid(link)]
 
     except Exception as e:
@@ -129,6 +160,8 @@ def scraper(url, resp):
 
 
 def extract_next_links(url, resp):
+
+    
     logger.info("🧠 inside extract_next_link.") 
     links = []
 
@@ -141,15 +174,23 @@ def extract_next_links(url, resp):
 
 
     try:
+        
         logger.info(f"IN TRY ")
+
+        #if theres no response, skip the url and return nothing
         if resp.status != 200 or resp.raw_response is None:
             logger.info(f"❗Skipping {url} due to status {resp.status} or missing response")
             return []
 
+
+        #use beautifulsoup to parse the content 
         soup = BeautifulSoup(resp.raw_response.content, "lxml")
+
+        #find all the a tags
         a_tags = soup.find_all('a', href=True)
         logger.info(f"🔗 Found {len(a_tags)} <a> tags in {url}")
 
+        #looking if they have an href and convert it to a url using urljoin
         for a_tag in soup.find_all('a', href=True):
             href = a_tag['href']
             absolute_url = urljoin(resp.url, href)
@@ -186,9 +227,11 @@ def is_valid(url):
             logger.info("⚠️ BOUT TO RETURN FALSE IN TOO LONG URL.")
             return False
         
-        # if re.search(r'(calendar|events|replytocom|sort|session|share|utm_|page=\d+|view=|id=|offset=)', url.lower()):
-        #     return False
+        #sorts out un
+        if re.search(r'(calendar|events|replytocom|sort|session|share|utm_|page=\d+|view=|id=|offset=)', url.lower()):
+            return False
         
+
         if re.search(r'(\/.+\/)\1{2,}', parsed.path):
             logger.info(f"[VALIDATION] Rejected {url} - trap pattern.")
             logger.info("⚠️ BOUT TO RETURN FALSE IN RE.SEARCH THING.")
@@ -285,4 +328,3 @@ def generate_report():
 
 import atexit
 atexit.register(generate_report)
-
